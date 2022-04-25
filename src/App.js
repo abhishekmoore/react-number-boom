@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import Counter from "./components/Counter";
+import Flex from "./components/Flex";
+import { useState } from "react";
+import ErrorFallBack from "./components/ErrorFallBack";
+import { ErrorBoundary } from "react-error-boundary";
 
-function App() {
+const App = () => {
+  const [boomData, setBoomData] = useState(0);
+
+  const setBoom = () => {
+    setBoomData((boomData) => {
+      if (boomData % 4 == 0 && boomData!=0) return boomData - 3;
+      return boomData + 1;
+    });
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <ErrorBoundary
+        FallbackComponent={ErrorFallBack}
+        onReset={() => {
+          // reset the state of your app so the error doesn't happen again
+        }}
+      >
+        <div className="flex-container">
+          <Flex boomData={boomData} />
+          <Counter boomData={boomData} setBoom={setBoom} />
+        </div>
+      </ErrorBoundary>
+    </>
   );
-}
+};
 
 export default App;
